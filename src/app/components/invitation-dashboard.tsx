@@ -30,8 +30,8 @@ const translations = {
     copyLink: "Скопировать ссылку",
     copied: "Скопировано",
     totalComing: "Всего придут",
-    kids: "Детей",
-    adults: "Взр",
+    kids: "детей",
+    adults: "взрослых:",
     cantCome: "Не смогут",
     declines: "Отказы",
     syncBadge: "Данные синхронизированы с Hello Park",
@@ -55,8 +55,8 @@ const translations = {
     copyLink: "Copy Link",
     copied: "Copied",
     totalComing: "Total Coming",
-    kids: "Kids",
-    adults: "Adults",
+    kids: "kids",
+    adults: "adults:",
     cantCome: "Can't Come",
     declines: "Declined",
     syncBadge: "Data synced with Hello Park",
@@ -80,8 +80,8 @@ const translations = {
     copyLink: "نسخ الرابط",
     copied: "تم النسخ",
     totalComing: "إجمالي الحضور",
-    kids: "الأطفال",
-    adults: "الكبار",
+    kids: "أطفال",
+    adults: "بالغين:",
     cantCome: "لن يحضروا",
     declines: "المعتذرين",
     syncBadge: "تمت مزامنة البيانات مع هيلو بارك",
@@ -105,8 +105,8 @@ const translations = {
     copyLink: "Copiar enlace",
     copied: "Copiado",
     totalComing: "Asistirán",
-    kids: "Niños",
-    adults: "Adultos",
+    kids: "niños",
+    adults: "adultos:",
     cantCome: "No asistirán",
     declines: "Rechazos",
     syncBadge: "Sincronizado con Hello Park",
@@ -130,8 +130,8 @@ const translations = {
     copyLink: "Linki kopyala",
     copied: "Kopyalandı",
     totalComing: "Cəmi gələcək",
-    kids: "Uşaqlar",
-    adults: "Böyüklər",
+    kids: "uşaq",
+    adults: "böyük:",
     cantCome: "Gələ bilməyəcəklər",
     declines: "İmtinalar",
     syncBadge: "Məlumatlar Hello Park ilə sinxronlaşdırılıb",
@@ -164,9 +164,53 @@ export default function InvitationDashboard() {
     
     let interval: any;
 
+    // Determine language from URL path or URL parameters first
+    const path = window.location.pathname;
+    const urlLang = searchParams.get("lang") || hashParams.get("lang");
+    
+    let hasExplicitLang = false;
+    if (urlLang && (urlLang === "ru" || urlLang === "en" || urlLang === "ar" || urlLang === "es" || urlLang === "az")) {
+      setLang(urlLang as "ru" | "en" | "ar" | "es" | "az");
+      hasExplicitLang = true;
+    } else if (path.includes("-en.html")) {
+      setLang("en");
+      hasExplicitLang = true;
+    } else if (path.includes("-ar.html")) {
+      setLang("ar");
+      hasExplicitLang = true;
+    } else if (path.includes("-es.html")) {
+      setLang("es");
+      hasExplicitLang = true;
+    } else if (path.includes("-az.html")) {
+      setLang("az");
+      hasExplicitLang = true;
+    }
+
     if (id) {
       setEventId(id);
       fetchDashboardData(id);
+
+      // If language was not explicitly specified in URL, fetch stored invitation language
+      if (!hasExplicitLang) {
+        fetch(`/api/shorten?id=${id}`)
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data && data.lang && ["ru", "en", "ar", "es", "az"].includes(data.lang)) {
+              setLang(data.lang as "ru" | "en" | "ar" | "es" | "az");
+            } else {
+              const savedLang = localStorage.getItem("hello_park_invitation_lang");
+              if (savedLang && (savedLang === "ru" || savedLang === "en" || savedLang === "ar" || savedLang === "es" || savedLang === "az")) {
+                setLang(savedLang as "ru" | "en" | "ar" | "es" | "az");
+              }
+            }
+          })
+          .catch(() => {
+            const savedLang = localStorage.getItem("hello_park_invitation_lang");
+            if (savedLang && (savedLang === "ru" || savedLang === "en" || savedLang === "ar" || savedLang === "es" || savedLang === "az")) {
+              setLang(savedLang as "ru" | "en" | "ar" | "es" | "az");
+            }
+          });
+      }
       
       // Auto-update every 5 seconds
       interval = setInterval(() => {
@@ -174,27 +218,11 @@ export default function InvitationDashboard() {
       }, 5000);
     } else {
       setLoading(false);
-    }
-
-    // Determine language from URL path
-    const path = window.location.pathname;
-    const urlLang = searchParams.get("lang") || hashParams.get("lang");
-    
-    if (urlLang && (urlLang === "ru" || urlLang === "en" || urlLang === "ar" || urlLang === "es" || urlLang === "az")) {
-      setLang(urlLang as "ru" | "en" | "ar" | "es" | "az");
-    } else if (path.includes("-en.html")) {
-      setLang("en");
-    } else if (path.includes("-ar.html")) {
-      setLang("ar");
-    } else if (path.includes("-es.html")) {
-      setLang("es");
-    } else if (path.includes("-az.html")) {
-      setLang("az");
-    } else {
-      // Fallback to localStorage
-      const savedLang = localStorage.getItem("hello_park_invitation_lang");
-      if (savedLang && (savedLang === "ru" || savedLang === "en" || savedLang === "ar" || savedLang === "es" || savedLang === "az")) {
-        setLang(savedLang as "ru" | "en" | "ar" | "es" | "az");
+      if (!hasExplicitLang) {
+        const savedLang = localStorage.getItem("hello_park_invitation_lang");
+        if (savedLang && (savedLang === "ru" || savedLang === "en" || savedLang === "ar" || savedLang === "es" || savedLang === "az")) {
+          setLang(savedLang as "ru" | "en" | "ar" | "es" | "az");
+        }
       }
     }
     
@@ -349,7 +377,10 @@ export default function InvitationDashboard() {
               <span className="text-[10px] font-bold uppercase tracking-wider">{t.totalComing}</span>
             </div>
             <div>
-              <span className="text-3xl font-black block leading-none">{stats?.total_kids || 0}</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-black leading-none">{stats?.total_kids || 0}</span>
+                <span className="text-xs font-bold opacity-90">{t.kids}</span>
+              </div>
               <span className="text-xs font-medium opacity-90 block mt-1">
                 {t.adults} {stats?.total_adults || 0}
               </span>
@@ -403,10 +434,10 @@ export default function InvitationDashboard() {
                   {rsvp.status === 'yes' && (
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-semibold bg-slate-50 px-2 py-1 rounded text-slate-600 flex items-center gap-1.5">
-                        <span className="text-sm">👦</span> {rsvp.kids_count} {rsvp.kids_count === 1 ? t.kidSingle : t.kidsPlural}
+                        <span className="text-sm">🧒</span> {rsvp.kids_count} {rsvp.kids_count === 1 ? t.kidSingle : t.kidsPlural}
                       </span>
                       <span className="text-xs font-semibold bg-slate-50 px-2 py-1 rounded text-slate-600 flex items-center gap-1.5">
-                        <span className="text-sm">👩</span> {rsvp.adults_count} {rsvp.adults_count === 1 ? t.adultSingle : t.adultsPlural}
+                        <span className="text-sm">🧑</span> {rsvp.adults_count} {rsvp.adults_count === 1 ? t.adultSingle : t.adultsPlural}
                       </span>
                     </div>
                   )}

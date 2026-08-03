@@ -870,7 +870,7 @@ export default function InvitationService() {
       const { id } = await response.json();
       
       const basePath = window.location.pathname.startsWith('/hello-park-invite') ? '/hello-park-invite' : '';
-      const link = `${window.location.origin}${basePath}/invite?id=${id}`;
+      const link = `${window.location.origin}${basePath}/invite?id=${id}&lang=${cleanData.lang}`;
       
       setGeneratedLink(link);
     } catch (e) {
@@ -1146,27 +1146,27 @@ export default function InvitationService() {
               {getCardTitle()}
             </div>
 
-            {/* Date and Time Row (Stitch Style) */}
-            <div className="w-full grid grid-cols-2 border-t border-slate-100 pt-5 mb-6 relative select-text">
+            {/* Date and Time Row (Adaptive Flex Style) */}
+            <div className="w-full flex items-center justify-between border-t border-slate-100 pt-5 mb-6 relative select-text gap-2 px-1">
               {/* Date Column */}
-              <div className="flex flex-col items-center">
+              <div className="flex-1 flex flex-col items-center text-center px-1">
                 <span className="text-[#9CA3AF] font-bold uppercase text-[10px] sm:text-[11px] tracking-wider mb-1">
                   {t.date}
                 </span>
-                <span className="gilroy-text text-lg sm:text-xl font-black whitespace-nowrap">
+                <span className={`gilroy-text font-black leading-tight ${locale === 'ar' ? 'text-sm sm:text-base' : 'text-base sm:text-lg'}`}>
                   {getFormattedDate(data.date, locale)}
                 </span>
               </div>
               
               {/* Separator line */}
-              <div className="absolute left-1/2 top-5 bottom-0 w-px bg-slate-200/80 -translate-x-1/2" />
+              <div className="w-px h-8 bg-slate-200/80 shrink-0 mx-1" />
               
               {/* Gathering Time Column */}
-              <div className="flex flex-col items-center">
+              <div className="flex-1 flex flex-col items-center text-center px-1">
                 <span className="text-[#9CA3AF] font-bold uppercase text-[10px] sm:text-[11px] tracking-wider mb-1">
                   {t.gatheringLabel}
                 </span>
-                <span className="gilroy-text text-lg sm:text-xl font-black">
+                <span className="gilroy-text text-base sm:text-lg font-black leading-tight">
                   {data.gatheringTime || "15:00"}
                 </span>
               </div>
@@ -1519,12 +1519,8 @@ export default function InvitationService() {
               {/* PREVIEW BLOCK */}
               <button 
                 onClick={() => {
-                  const hash = generatedLink.split("invite=")[1];
-                  const decoded = decodeData(hash);
-                  if (decoded) {
-                    setGuestInvite(decoded);
-                    setIsEnvelopeOpen(false);
-                  }
+                  setGuestInvite(formData);
+                  setIsEnvelopeOpen(false);
                 }}
                 className="w-full bg-white text-slate-900 border border-slate-200 rounded-3xl py-4 shadow-sm font-bold text-sm flex justify-center items-center gap-2 hover:bg-slate-50 transition-colors"
               >
