@@ -521,7 +521,7 @@ function decodeData(str: string): InvitationData | null {
 // Helper to construct messenger share messages internationally
 const getShareMessage = (name: string, lang: Language, link: string) => {
   if (lang === "en") {
-    return `${name} invites you to their Birthday Party at Hello Park! Open the magical envelope: ${link}`;
+    return `${name} invites you to a Birthday Party at Hello Park! Open the magical envelope: ${link}`;
   }
   if (lang === "ar") {
     return `${name} يدعوكم لحفل عيد ميلاده في هيلو بارك! افتح المغلف السحري: ${link}`;
@@ -998,7 +998,7 @@ export default function InvitationService() {
       if (locale === "en") {
         return (
           <h2 className="gilroy-text">
-            {data.name} invites you to their birthday party at the park of the future <br />
+            {data.name} invites you to a birthday party at the park of the future <br />
             <span className="gilroy-brand">Hello Park</span>
           </h2>
         );

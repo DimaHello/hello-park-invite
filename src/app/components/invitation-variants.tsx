@@ -226,7 +226,7 @@ export default function InvitationVariants() {
     },
     en: {
       inviteLabel: "YOU'VE RECEIVED AN INVITATION!",
-      invitesText: "invites you to their birthday party in the park of the future",
+      invitesText: "invites you to a birthday party in the park of the future",
       dateLabel: "Date",
       timeLabel: "Gathering",
       btnYes: "We will come",
