@@ -109,6 +109,15 @@ const helloParks: ParkInfo[] = [
     supportedLangs: ["ru", "en", "az"]
   },
   {
+    id: "voronezh",
+    nameRu: "Hello Park Воронеж",
+    nameEn: "Hello Park Voronezh",
+    addressRu: "Воронежская область, Рамонский район, пос. Солнечный, ул. Парковая, д. 3",
+    addressEn: "Voronezh Oblast, Ramonsky District, Solnechny, Parkovaya St. 3",
+    mapUrl: "https://yandex.ru/maps/org/hello_park/46014785201?si=vpg96fb71dcn99jvzqttfnp3q8",
+    supportedLangs: ["ru", "en"]
+  },
+  {
     id: "sakhalin",
     nameRu: "Hello Park Южно-Сахалинск",
     nameEn: "Hello Park Yuzhno-Sakhalinsk",
